@@ -1,94 +1,58 @@
-def check_col(a, b, n):
-    chk = 0
-    for i in range(1, n+1):
-        if board[a+i][b]:
-            chk += 1
+# 상 하 좌 우 좌상 우상 좌하 우하
+dx = [-1, 1, 0, 0, -1, -1, 1, 1]
+dy = [0, 0, -1, 1, -1, 1, -1, 1]
+
+
+def find_omok(a, b):
+    cnt = 1
+    idx = 0
+    x = a
+    y = b
+    while idx < 8:
+        x += dx[idx]
+        y += dy[idx]
+        if board[x][y] == 2:
+            cnt += 1
         else:
-            if chk >= 5:
+            if cnt >= 5:
                 return 1
-            chk = 0
-    if chk >= 5:
-        return 1
+            else:
+                x = a
+                y = b
+                cnt = 1
+                idx += 1
     return 0
-
-
-def check_row(a, b, n):
-    chk = 0
-    for i in range(1, n+1):
-        if board[a][b+i]:
-            chk += 1
-        else:
-            if chk >= 5:
-                return 1
-            chk = 0
-    if chk >= 5:
-        return 1
-    return 0
-
-
-def check_diag1(a, b, n):
-    chk = 0
-    for i in range(1, n+1):
-        if board[a+i][b+i]:
-            chk += 1
-        else:
-            if chk >= 5:
-                return 1
-            chk = 0
-    if chk >= 5:
-        return 1
-    return 0
-
-
-def check_diag2(a, b, n):
-    chk = 0
-    for i in range(1, n+1):
-        if board[a-i][b+i]:
-            chk += 1
-        else:
-            if chk >= 5:
-                return 1
-            chk = 0
-    if chk >= 5:
-        return 1
-    return 0
-
 
 T = int(input())
 
 for t in range(1, T+1):
     N = int(input())
+    board_str = [input() for _ in range(N)]
     board = []
-    board += [[0]*(N+2)]
-    for n in range(N):
-        temp = input()
-        board += [[0]]
-        for i in range(N):
-            if temp[i] == '.':
-                board[n+1] += [0]
-            else:
-                board[n+1] += [1]
-        board[n+1] += [0]
+    for i in range(N+2):
+        if i == 0 or i == N+1:
+            board += [[0]*(N+2)]
+        else:
+            temp = []
+            for j in range(N+2):
+                if j == 0 or j == N + 1:
+                    temp += [0]
+                elif board_str[i-1][j-1] == '.':
+                    temp += [1]
+                else:
+                    temp += [2]
+            board += [temp]
 
-    cnt = 1
-    if check_diag1(0, 0, N) or check_diag2(N+1, 0, N):
-        print('#%d %s' % (t, 'YES'))
-        continue
-
+    chk = 0
     for i in range(1, N+1):
-        if check_row(i, 0, N) or check_col(0, i, N):
-            print('#%d %s' % (t, 'YES'))
-            cnt = 0
+        for j in range(1, N+1):
+            if board[i][j] == 2:
+                chk = find_omok(i, j)
+                if chk:
+                    break
+        if chk:
             break
-        if N-i >= 5:
-            if check_diag1(i, 0, N-i) or check_diag1(0, i, N-i) or check_diag2(N+1, i, N-i):
-                print('#%d %s' % (t, 'YES'))
-                cnt = 0
-                break
-        if i >= 6:
-            if check_diag2(0, i, i - 1):
-                print('#%d %s' % (t, 'YES'))
-                cnt = 0
-                break
-    if cnt:
-        print('#%d %s' % (t, 'NO'))
+    if chk:
+        print('#%d YES' % t)
+    else:
+        print('#%d NO' % t)

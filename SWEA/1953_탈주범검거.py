@@ -15,17 +15,11 @@ pipe = [[1, 2, 5, 6],
         ]
 
 
-def print_for(arr):
-    for i in arr:
-        print(i)
-    print()
-
-
 def get_sum(arr, n, m):
     cnt = 0
     for i in range(n):
         for j in range(m):
-            if arr[i][j] == 1:
+            if arr[i][j] != 0:
                 cnt += 1
     return cnt
 
@@ -45,10 +39,13 @@ def bfs(a, b, h):
             ny = y + dxy[tunnel[x][y]][k][1]
             if nx < 0 or nx >= N or ny < 0 or ny >= M:
                 continue
-            if tunnel[nx][ny] in pipe[k] and not visited[nx][ny]:
-                visited[nx][ny] = 1
-                queue.append((nx, ny, depth - 1))
-
+            if tunnel[nx][ny] in pipe[k]:
+                if not visited[nx][ny]:
+                    visited[nx][ny] = visited[x][y] + 1
+                    queue.append((nx, ny, depth - 1))
+                elif visited[nx][ny] > visited[x][y] + 1:
+                    visited[nx][ny] = visited[x][y] + 1
+                    queue.append((nx, ny, depth - 1))
 
 
 T = int(input())
@@ -57,8 +54,6 @@ for t in range(1, T+1):
     N, M, start_r, start_c, hour = map(int, input().split())
     tunnel = [list(map(int, input().split())) for _ in range(N)]
     visited = [[0]*M for _ in range(N)]
-    # print_for(visited)
     bfs(start_r, start_c, hour - 1)
-    # print_for(visited)
 
     print('#%d %d' % (t, get_sum(visited, N, M)))

@@ -2,7 +2,8 @@ def dijkstra(start):
     visited = [0]*(N+1)
     weight = [0] + [987654321]*N
     visited[start] = 1
-    weight[start] = 0
+    if start != X:
+        weight[start] = 0
 
     for n, w in nodes[start]:
         weight[n] = w
@@ -23,13 +24,19 @@ N, M, X = map(int, input().split())
 nodes = [[] for _ in range(N+1)]
 for _ in range(M):
     start, end, weight = map(int, input().split())
-    nodes[start].append((end, weight))
+    chk = 0
+    for w in range(len(nodes[start])):
+        if nodes[start][w][0] == end:
+            nodes[start][w][1] = min(nodes[start][w][1], weight)
+            chk = 1
+            break
+    if chk:
+        continue
+    nodes[start].append([end, weight])
 
-print(nodes)
 result = dijkstra(X)
 for k in range(1, N+1):
     temp = dijkstra(k)
-    print(k, temp)
     result[k] += temp[X]
 
 print(max(result))

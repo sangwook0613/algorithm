@@ -1,42 +1,40 @@
-def dijkstra(start):
-    visited = [0]*(N+1)
-    weight = [0] + [987654321]*N
-    visited[start] = 1
-    if start != X:
-        weight[start] = 0
+BIG = int(1e9)
 
-    for n, w in nodes[start]:
-        weight[n] = w
+def dij(start, arr):
+    weight = [0] + [BIG]*N
+    weight[start] = 0
+    q = [start]
 
-    for _ in range(1, N):
-        # print([weight[i] for i in range(1, N+1) if not visited[i]])
-        min_idx = weight.index(min([weight[i] for i in range(1, N+1) if not visited[i]]))
-        # print(min_idx)
-        visited[min_idx] = 1
-        for n, w in nodes[min_idx]:
-            weight[n] = min(weight[n], weight[min_idx] + w)
+    while q:
+        a = q.pop(0)
+        for i, w in arr[a]:
+            temp = weight[a] + w
+            if temp < weight[i]:
+                weight[i] = temp
+                q.append(i)
 
     return weight
 
 
 N, M, X = map(int, input().split())
-
-nodes = [[] for _ in range(N+1)]
+board = [[]*N for _ in range(N+1)]
+transpose = [[]*N for _ in range(N+1)]
 for _ in range(M):
     start, end, weight = map(int, input().split())
     chk = 0
-    for w in range(len(nodes[start])):
-        if nodes[start][w][0] == end:
-            nodes[start][w][1] = min(nodes[start][w][1], weight)
+    for w in range(len(board[start])):
+        if board[start][w][0] == end:
+            board[start][w][1] = min(board[start][w][1], weight)
             chk = 1
             break
     if chk:
         continue
-    nodes[start].append([end, weight])
+    board[start].append([end, weight])
+    transpose[end].append([start, weight])
 
-result = dijkstra(X)
-for k in range(1, N+1):
-    temp = dijkstra(k)
-    result[k] += temp[X]
-
-print(max(result))
+board_dij = dij(X, board)
+transpose_dij = dij(X, transpose)
+ans = 0
+for i in range(1, N+1):
+    ans = max(ans, board_dij[i] + transpose_dij[i])
+print(ans)

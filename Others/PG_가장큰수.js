@@ -11,11 +11,14 @@ function solution(numbers) {
         arr.push(String(numbers[i]))
     }
     
+    // 여기가 이 문제의 핵심!
     arr.sort(((a, b) => (b+a) - (a+b)))
     
     for (let n of arr) {
         answer += n
     }
+
+    // 예외케이스도 항상 고려할것!
     if (parseInt(answer) === 0) {
         return '0'
     }

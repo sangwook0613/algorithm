@@ -6,9 +6,10 @@ sys.setrecursionlimit(111111) # 충분한 재귀 깊이를 주어 오류를 예�
 
 def dfs(s):
     temp.append(s)
+    temp_chk[s] = 1
     if not visited[s]:
         visited[s] = 1
-        if numbers[s-1] in temp:
+        if temp_chk[numbers[s-1]]:
             global chk
             idx = temp.index(numbers[s-1])
             chk = temp[idx:]
@@ -26,7 +27,9 @@ for _ in range(T):
     for i in range(1, N+1):
         chk = []
         temp = []
-        dfs(i)
+        temp_chk = [0]*(N+1)
+        if not visited[i]:
+            dfs(i)
         if chk:
             ans += len(chk)
 

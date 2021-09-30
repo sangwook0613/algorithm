@@ -1,25 +1,14 @@
 # 프로그래머스 최소직사각형
+## 진짜 이런거를 바로바로 못푸는건 문제가 있다...
+## 좀 더 분발하자..
 
 def solution(sizes):
     answer = 0
-    first = []
-    second = []
-    for a, b in sizes:
-        first.append(a)
-        second.append(b)
-
-    if max(first) > max(second):
-        sizes.sort()
-    else:
-        sizes.sort(key=lambda x: x[1])
-    print(sizes)
-    print(first, second)
-
+    max_num = 0
+    min_nums = []
     for i in range(len(sizes)):
-        if sizes[i][0] < max(second) and sizes[i][1] < max(first):
-            first[i], second[i] = second[i], first[i]
-            sizes[i][0], sizes[i][1] = sizes[i][1], sizes[i][0]
-    print(sizes)
-    print(first, second)
+        min_nums.append(min(sizes[i]))
+        max_num = max(max_num, max(sizes[i]))
 
+    answer = max_num * max(min_nums)
     return answer

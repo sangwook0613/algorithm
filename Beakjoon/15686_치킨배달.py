@@ -1,4 +1,7 @@
 # 15686 치킨 배달
+## BFS로 어려운 계산 다해놓고 마지막에 너무 무식하게 풀려고했다,,
+## 여러 경우를 항상 고려해야한다!
+from itertools import combinations
 
 dxy = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
@@ -36,19 +39,14 @@ for r, c in house:
     visited = [[0]*N for _ in range(N)]
     bfs(r, c)
 
-max_cnt = []
-for i in range(len(chicken_cnt)):
-    max_cnt.append((i, sum(chicken_cnt[i])))
-max_cnt.sort(key= lambda x: x[1])
+ans = 100000
+for group in list(combinations(chicken_cnt, M)):
+    temp = 0
+    for b in range(len(house)):
+        min_length = 10000
+        for a in range(len(group)):
+            min_length = min(min_length, group[a][b])
+        temp += min_length
+    ans = min(ans, temp)
 
-result = []
-for i in range(len(max_cnt[:M])):
-    result.append(chicken_cnt[max_cnt[i][0]])
-
-ans = 0
-for c in range(len(result[0])):
-    temp = 100000
-    for r in range(len(result)):
-        temp = min(temp, result[r][c])
-    ans += temp
 print(ans)

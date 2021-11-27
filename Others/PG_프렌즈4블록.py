@@ -1,12 +1,9 @@
 # 프로그래머스 프렌즈4블록
-
-dxy = [(0, 1), (1, 0), (1, 1)]
-
+# 구현 문제 - 문자열을 리스트로 변환하여 쉽게 풀 수 있었다.
 def solution(m, n, board):
     new_board = []
     for i in range(m):
         new_board.append(list(board[i]))
-    print(new_board)
         
     answer = 0
     while True:
@@ -31,16 +28,23 @@ def solution(m, n, board):
                         
         if not erase:
             break
-        print(visited)
-        num = m-1
+            
         temp_board = [[] for _ in range(m)]
         for b in range(n):
-            num -= 1
+            num = m-1
             for a in range(m-1, -1, -1):
                 if visited[a][b] == 1:
                     pass
                 else:
-                    temp_board[a].append(new_board[a][b])
-                
+                    temp_board[num].append(new_board[a][b])
+                    num -= 1
+            for k in range(num+1):
+                temp_board[k].append(' ')
         
+        new_board = temp_board
+    
+    for row in new_board:
+        for c in row:
+            if c == ' ':
+                answer += 1
     return answer

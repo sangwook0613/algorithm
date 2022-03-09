@@ -22,3 +22,19 @@ for _ in range(T):
             print(c)
 
     # 인접한 수 비교하기
+    ## BFS 활용
+    new_circle = [[0]*M for _ in range(N+1)]
+    visited = [[0]*M for _ in range(N+1)]
+    q = [(1, 1, 0)] # 행, 열, 지울지 여부
+    while q:
+        a, b, c = q.pop(0)
+        if a > 1 and circle[a][b] == circle[a-1][b]:
+            pass
+        if a < N-1 and circle[a][b] == circle[a+1][b]:
+            pass
+        if circle[a][b] == circle[a][b-1]:
+            pass
+        if circle[a][b] == circle[a][(b+1)%M]:
+            pass
+    i-1, (i+1)%M
+

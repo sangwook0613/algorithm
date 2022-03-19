@@ -1,30 +1,27 @@
 # 백준 20159 동작 그만. 밑장 빼기냐?
-N = int(input())
-numbers = list(map(int, input().split()))
-even_numbers = [numbers[n] for n in range(0, N, 2)]
+n = int(input())
+x = list(map(int,input().split()))
 
-even_idx = 0 # 내 카드 중에서 가장 작은 수의 인덱스
-odd_idx = 1 # 친구 카드 중에서 가장 큰 수의 인덱스
-for i in range(2, N):
-    if i % 2 == 0 and numbers[even_idx] > numbers[i]:
-        even_idx = i
-    if i % 2 and numbers[odd_idx] < numbers[i]:
-        odd_idx = i
+cards_sum = [[0] * (n//2 + 1)] + [[0] * (n//2 + 1)]
 
-temp = numbers[-1] - numbers[even_idx]
-temp2 = numbers[odd_idx] - numbers[-1]
 
-ans = 0
-if temp > temp2:
-    for n in range(0, even_idx, 2):
-        ans += numbers[n]
-    for n in range(even_idx+1, N, 2):
-        ans += numbers[n]
-else:
-    for n in range(0, odd_idx, 2):
-        ans += numbers[n]
-    for n in range(odd_idx, N, 2):
-        ans += numbers[n]
-    ans -= numbers[-1]
+for i in range(n):
+    # 짝수 인덱스일 경우
+    if not (i+1) % 2:
+        cards_sum[0][i//2+1] = cards_sum[0][i//2] + x[i]
+    # 홀수 인덱스일 경우
+    else:
+        cards_sum[1][i//2+1] = cards_sum[1][i//2] + x[i]
 
-print(ans if ans > sum(even_numbers) else sum(even_numbers))
+max_value = 0
+result = [0] * (n+1)
+for i in range(1,n+1):
+    idx = i//2 + 1
+    # 짝수 인덱스일 경우
+    if not i % 2:
+        result[i] = cards_sum[1][idx-1] + cards_sum[0][n//2-1] - cards_sum[0][idx-2]
+    else:
+        result[i] = cards_sum[1][idx-1] + (cards_sum[0][n//2-1]-cards_sum[0][idx-1]) + x[n-1]
+    max_value = max(result[i],max_value)
+
+print(max_value)
